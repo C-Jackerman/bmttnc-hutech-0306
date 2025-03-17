@@ -52,27 +52,84 @@
 #     app.run(host="0.0.0.0", port=5000, debug=True)
 
 #///////////////////////////////////////////////////
+# from flask import Flask, request, jsonify
+# from cipher.railfence.railfence_cipher import RailFenceCipher
+
+# app = Flask(__name__)
+
+# @app.route("/api/railfence/encrypt", methods=["POST"])
+# def railfence_encrypt():
+#     data = request.json
+#     plain_text = data['plain_text']
+#     rails = int(data['rails'])
+#     cipher = RailFenceCipher(rails)
+#     encrypted_text = cipher.encrypt_text(plain_text)
+#     return jsonify({'encrypted_message': encrypted_text})
+
+# @app.route("/api/railfence/decrypt", methods=["POST"])
+# def railfence_decrypt():
+#     data = request.json
+#     cipher_text = data['cipher_text']
+#     rails = int(data['rails'])
+#     cipher = RailFenceCipher(rails)
+#     decrypted_text = cipher.decrypt_text(cipher_text)
+#     return jsonify({'decrypted_message': decrypted_text})
+
+# if __name__ == "__main__":
+#     app.run(host="0.0.0.0", port=5000, debug=True)
+
+#////////////////////////////////////////////////////////////
+
+# from flask import Flask, request, jsonify
+# from cipher.playfair import PlayfairCipher
+
+# app = Flask(__name__)
+
+# @app.route("/api/playfair/encrypt", methods=["POST"])
+# def playfair_encrypt():
+#     data = request.json
+#     plain_text = data['plain_text']
+#     key = data['key']
+#     cipher = PlayfairCipher(key)
+#     encrypted_text = cipher.encrypt(plain_text)
+#     return jsonify({'encrypted_message': encrypted_text})
+
+# @app.route("/api/playfair/decrypt", methods=["POST"])
+# def playfair_decrypt():
+#     data = request.json
+#     cipher_text = data['cipher_text']
+#     key = data['key']
+#     cipher = PlayfairCipher(key)
+#     decrypted_text = cipher.decrypt(cipher_text)
+#     return jsonify({'decrypted_message': decrypted_text})
+
+# if __name__ == "__main__":
+#     app.run(host="0.0.0.0", port=5000, debug=True)
+
+#///////////////////////////////////////////////////////
 from flask import Flask, request, jsonify
-from cipher.railfence.railfence_cipher import RailFenceCipher
+from cipher.transposition import TranspositionCipher
 
 app = Flask(__name__)
 
-@app.route("/api/railfence/encrypt", methods=["POST"])
-def railfence_encrypt():
+# transposition_cipher = TranspositionCipher()
+
+@app.route("/api/transposition/encrypt", methods=["POST"])
+def transposition_encrypt():
     data = request.json
     plain_text = data['plain_text']
-    rails = int(data['rails'])
-    cipher = RailFenceCipher(rails)
-    encrypted_text = cipher.encrypt_text(plain_text)
+    key = data['key']
+    cipher = TranspositionCipher(int(key))
+    encrypted_text = cipher.encrypt(plain_text)
     return jsonify({'encrypted_message': encrypted_text})
 
-@app.route("/api/railfence/decrypt", methods=["POST"])
-def railfence_decrypt():
+@app.route("/api/transposition/decrypt", methods=["POST"])
+def transposition_decrypt():
     data = request.json
     cipher_text = data['cipher_text']
-    rails = int(data['rails'])
-    cipher = RailFenceCipher(rails)
-    decrypted_text = cipher.decrypt_text(cipher_text)
+    key = data['key']
+    cipher = TranspositionCipher(int(key))
+    decrypted_text = cipher.decrypt(cipher_text)
     return jsonify({'decrypted_message': decrypted_text})
 
 if __name__ == "__main__":
