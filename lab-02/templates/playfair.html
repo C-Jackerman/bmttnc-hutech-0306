@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Playfair Cipher</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <h2 class="text-center font-weight-bold mt-4">Playfair Cipher</h2>
+      
+      <h4 class="text-primary font-weight-bold">Encryption</h4>
+      <form method="POST" action="/playfair/encrypt">
+        <div class="form-group">
+          <label for="InputPlainText">Plain Text:</label>
+          <input
+            type="text"
+            class="form-control"
+            name="InputPlainText"
+            placeholder="Enter plain text"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="InputKeyText">Key:</label>
+          <input
+            type="text"
+            class="form-control"
+            name="InputKeyText"
+            placeholder="Enter key"
+            required
+          />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Encrypt</button>
+      </form>
+      
+      <h4 class="text-primary font-weight-bold mt-4">Decryption</h4>
+      <form method="POST" action="/playfair/decrypt">
+        <div class="form-group">
+          <label for="InputCipherText">Cipher Text:</label>
+          <input
+            type="text"
+            class="form-control"
+            name="InputCipherText"
+            placeholder="Enter cipher text"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="InputKeyText">Key:</label>
+          <input
+            type="text"
+            class="form-control"
+            name="InputKeyText"
+            placeholder="Enter key"
+            required
+          />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Decrypt</button>
+      </form>
+    </div>
+  </body>
+</html>
