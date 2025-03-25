@@ -1,62 +1,59 @@
 class PlayFairCipher:
-    def __init__(self):
-        pass
-    
-    def create_playfair_matrix(self, key):
-        key = key.replace("J","I")
-        key = key.upper()
-        key_set = set(key)
+    def __init__(self, key):
+        self.key = self._generate_key_square(key)
+
+    def _generate_key_square(self, key):
         alphabet = "ABCDEFGHIKLMNOPQRSTUVWXYZ"
-        remaining_letters = (letter for letter in alphabet if letter not in key_set)
-        matrix = list(key)
-         
-        for letter in remaining_letters:
-            matrix.append(letter)
-            if len(matrix) == 25:
-                break
-        
-        playfair_matrix = [matrix[i:i+5]for i in range(0, len(matrix), 5)]
-        return playfair_matrix
-    
-    def find_letter_coords(self, matrix, letter):
-        for row in range(len (matrix)):
-            for col in range (len(matrix[row])):
-                if matrix[row][col] == letter:
+        key = "".join(dict.fromkeys(key.upper().replace("J", "I") + alphabet))
+        return [list(key[i:i+5]) for i in range(0, 25, 5)]
+
+    def _find_position(self, letter):
+        for row in range(5):
+            for col in range(5):
+                if self.key[row][col] == letter:
                     return row, col
-        
-    def playfair_encrypt(self, plain_text, matrix):
-        plain_text = plain_text.replace("J","I")#chuyen J tthanh I trong van ban dau vao
-        plain_text = plain_text.upper()
-        encrypted_text = ""
-        
-        for i in range(0, len(plain_text), 2):
-            pair = plain_text[i:i+2]
-            if len(pair) == 1: #xu ly neu so luong ky tu le
-                pair += "X"
-            row1, col1 = self.find_letter_coords(matrix, pair[0])
-            row2, col2 = self.find_letter_coords(matrix, pair[1])
-                
-            if row1 == row2:
-                encrypted_text += matrix[row1][(col1+1)%5] + matrix[row2][(col2 + 1)%5]
-            elif col1 == col2:
-                encrypted_text += matrix[(row1+1)%5][col1] + matrix[(row2+1)%5][col2 ]
+        return None
+
+    def _process_text(self, text):
+        text = text.upper().replace("J", "I")
+        processed_text = ""
+        i = 0
+        while i < len(text):
+            a = text[i]
+            b = text[i+1] if i+1 < len(text) else "X"
+            if a == b:
+                processed_text += a + "X"
+                i += 1
             else:
-                encrypted_text += matrix[row1][col2] + matrix[row2][col1]
-        return encrypted_text   
-        
-    def playfair_decrypt(self, cipher_text, matrix):
-        cipher_text = cipher_text.upper()
-        decrypted_text = ""
+                processed_text += a + b
+                i += 2
+        if len(processed_text) % 2 != 0:
+            processed_text += "X"
+        return processed_text
+
+    def encrypt(self, plain_text):
+        text = self._process_text(plain_text)
+        cipher_text = ""
+        for i in range(0, len(text), 2):
+            row1, col1 = self._find_position(text[i])
+            row2, col2 = self._find_position(text[i+1])
+            if row1 == row2:
+                cipher_text += self.key[row1][(col1+1) % 5] + self.key[row2][(col2+1) % 5]
+            elif col1 == col2:
+                cipher_text += self.key[(row1+1) % 5][col1] + self.key[(row2+1) % 5][col2]
+            else:
+                cipher_text += self.key[row1][col2] + self.key[row2][col1]
+        return cipher_text
+
+    def decrypt(self, cipher_text):
+        plain_text = ""
         for i in range(0, len(cipher_text), 2):
-            pair = cipher_text[i:i+2]
-            
-            row1, col1 = self.find_letter_coords(matrix, pair[0])
-            row2, col2 = self.find_letter_coords(matrix, pair[1])
+            row1, col1 = self._find_position(cipher_text[i])
+            row2, col2 = self._find_position(cipher_text[i+1])
             if row1 == row2:
-                decrypted_text += matrix[row1][(col1 - 1)%5] + matrix[row2][(col2 - 1)%5]
+                plain_text += self.key[row1][(col1-1) % 5] + self.key[row2][(col2-1) % 5]
             elif col1 == col2:
-                decrypted_text += matrix[(row1 - 1)%5][col1] + matrix[(row2-1)%5][col2]
+                plain_text += self.key[(row1-1) % 5][col1] + self.key[(row2-1) % 5][col2]
             else:
-                decrypted_text += matrix[row1][col2] + matrix[row2][col1]
-        return decrypted_text
-            
+                plain_text += self.key[row1][col2] + self.key[row2][col1]
+        return plain_text
