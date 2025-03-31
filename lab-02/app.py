@@ -62,17 +62,19 @@ def railfence():
 def railfence_encrypt():
     text = request.form['InputPlainText']
     key = int(request.form['InputKeyText'])
-    RailFence = RailFenceCipher()
-    encrypted_text = RailFence.rail_fence_encrypt(text, key)
+    RailFence = RailFenceCipher(key)  # ✅ Truyền key vào constructor
+    encrypted_text = RailFence.encrypt_text(text)
     return f"text: {text} <br/> Key: {key} <br/> Encrypted text: {encrypted_text}"
+
 
 @app.route("/railfence/decrypt", methods=['POST'])
 def railfence_decrypt():
     text = request.form['InputCipherText']
     key = int(request.form['InputKeyText'])
-    RailFence = RailFenceCipher()
-    decrypted_text = RailFence.rail_fence_decrypt(text, key)
+    RailFence = RailFenceCipher(key)  # ✅ Truyền key vào constructor
+    decrypted_text = RailFence.decrypt_text(text)
     return f"text: {text} <br/> Key: {key} <br/> Decrypted text: {decrypted_text}"
+
 
 
 @app.route("/playfair")
@@ -83,19 +85,19 @@ def playfair():
 def playfair_encrypt():
     text = request.form['InputPlainText']
     key = request.form['InputKeyText']
-    playfair_cipher = PlayFairCipher()
-    matrix = playfair_cipher.create_playfair_matrix(key)
-    encrypted_text = playfair_cipher.playfair_encrypt(text, matrix)
+    playfair_cipher = PlayFairCipher(key)
+    encrypted_text = playfair_cipher.encrypt(text)  # Sử dụng phương thức đúng
     return f"Text: {text} <br/> Key: {key} <br/> Encrypted Text: {encrypted_text}"
+
 
 @app.route("/playfair/decrypt", methods=['POST'])
 def playfair_decrypt():
     text = request.form['InputCipherText']
     key = request.form['InputKeyText']
-    playfair_cipher = PlayFairCipher()
-    matrix = playfair_cipher.create_playfair_matrix(key)
-    decrypted_text = playfair_cipher.playfair_decrypt(text, matrix)
+    playfair_cipher = PlayFairCipher(key)
+    decrypted_text = playfair_cipher.decrypt(text)  # Sử dụng phương thức đúng
     return f"Text: {text} <br/> Key: {key} <br/> Decrypted Text: {decrypted_text}"
+
 #main function
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port = 5050, debug = True)
